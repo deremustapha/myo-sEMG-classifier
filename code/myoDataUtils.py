@@ -15,7 +15,8 @@
 import numpy as np
 from scipy import signal
 import math
-
+import random
+from sklearn.utils import shuffle
 
 
 def vec_to_matrix(vector_data, no_channel=8):
@@ -88,6 +89,31 @@ def artifact_removal(data, cutoff=2, sampling_frequency=200, order=3):
     return filtered_data
 
 
+def data_shuffle(data, label):
+    
+    X, y = shuffle(data, label, random_state=42)
+    
+    return X, y
+
+
+def data_normalization(data):
+    
+    # This is not the write way to do it.
+    # I could have used tensorflow Transform or Apache beam 
+    # But for some werid reasons i couldnt make it to work.
+    # So I am doing it the crude way
+    
+    for idx, info in enumerate(data):
+        
+        mean = np.mean(info, axis=1)
+        std = np.std(info, axis=1)
+        norm = ((info.transpose() - mean) / std).transpose()
+        
+        data[idx] = norm
+    
+    return data
+    
+
 def get_data(abs_path, n_male, n_female, n_exercise):
     
     total_male_subject = n_male
@@ -105,7 +131,7 @@ def get_data(abs_path, n_male, n_female, n_exercise):
     
         for exercise in range(total_exercise):
             
-            per_subject = abs_path+"\\Male"+str(1)+"\\training0"+"\\classe_"+ str(exercise)+".dat"
+            per_subject = abs_path+"\\Male"+str(subject)+"\\training0"+"\\classe_"+ str(exercise)+".dat"
             read_data = np.fromfile(per_subject, dtype=np.int16)
             data_array = np.array(read_data, dtype=np.float32)
             
@@ -141,5 +167,6 @@ def get_data(abs_path, n_male, n_female, n_exercise):
             full_data_stack = np.row_stack((full_data_stack, data_stack))
             full_label_stack = np.vstack((full_label_stack, label_stack))
     
-    return full_data_stack, full_label_stack
+    X, y = data_shuffle(full_data_stack, full_label_stack)
+    return X, y 
         
