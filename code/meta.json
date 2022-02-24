@@ -1,0 +1,8 @@
+{
+    "lib": "libvart-dpu-runner.so",
+    "filename": "model.xmodel",
+    "kernel": [
+        "subgraph_quant_conv2d"
+    ],
+    "target": "DPUCZDX8G_ISA0_B2304_MAX_BG2"
+}
