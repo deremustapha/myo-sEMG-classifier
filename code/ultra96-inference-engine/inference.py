@@ -70,7 +70,7 @@ while True:
     prediction = softmax.argmax()
     
     write_prediction(prediction)
-    print(prediction)
+    print('Gesture is {}'.format(prediction))
     
     
 del overlay
