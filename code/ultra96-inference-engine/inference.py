@@ -20,10 +20,10 @@ com_port = '/dev/ttyUSB0'  # Myoband dongle was connected to Ultra96-v2 on this 
 arduino = Serial(com_port, 115200, timeout=2)
 
 # Importing DPU Overlay blocks and .xmodel
-overlay = DpuOverlay("dpu.bit")
-overlay.load_model("model.xmodel")
+overlay = DpuOverlay("dpu.bit")  # load the DPU
+overlay.load_model("model.xmodel") # load the complied model
 
-def write_prediction(x):
+def write_prediction(x):  
     
     X = str(x)
     arduino.write(bytes(X, 'utf-8'))
@@ -37,11 +37,6 @@ while True:
     
     data = get_data()
     data = data[0:8,1:53] # Get the recent 52 samples
-    
-    while data.shape[1] < 52:
-        
-        data = get_data()
-        data = data[0:8,1:53] # Get the recent 52 samples
     
     data = artifact_removal(data)
     # data = normalize(data)
