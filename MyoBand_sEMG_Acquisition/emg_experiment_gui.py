@@ -1,20 +1,24 @@
 import tkinter as tk
+from tkinter import ttk
 from experiment_one import *
 from playsound import playsound
 import os
 from PIL import ImageTk, Image
 
+base_path = os.getcwd()
+
 
 def acquire_data():
-    playsound("/home/darcula-venom/Documents/ExperimentalDesign/MyoBand_sEMG_Acquisition/sound.wav")
+    sound_path = base_path + "/sound.wav"
+    playsound(sound_path)
 
     seconds = float(acquisition_time.get()) + 0.2
     subject_index = subject_no.get()
     experiment_index = clicked.get().split()[1]
     repetition_index = rep_no.get()
 
-    csv_file_path = "/home/darcula-venom/Documents/ExperimentalDesign/BMIS_EMG_DATA/data/csv_data/subject_" + subject_index
-    mat_file_path = "/home/darcula-venom/Documents/ExperimentalDesign/BMIS_EMG_DATA/data/mat_data/subject_" + subject_index
+    csv_file_path = base_path + "/ExperimentalDesign/BMIS_EMG_DATA/data/csv_data/subject_" + subject_index
+    mat_file_path = base_path + "/ExperimentalDesign/BMIS_EMG_DATA/data/mat_data/subject_" + subject_index
 
     print(csv_file_path)
     print(mat_file_path)
@@ -30,33 +34,70 @@ def acquire_data():
     p.start()
 
 
+# function to open a new window
+# on a button click
+def display_gesture_new_window():
+    # Toplevel object which will
+    # be treated as a new window
+    newWindow = tk.Toplevel(window)
+
+    # sets the title of the
+    # Toplevel widget
+    newWindow.title("Gesture Display")
+
+    # sets the geometry of toplevel
+    newWindow.geometry("1000x1000")
+
+    # A Label widget to show in toplevel
+    get_choice = int(clicked.get().split()[1]) - 1
+    picture_path = base_path + "/pictures/{}".format(image_list[get_choice])
+    print(picture_path)
+    images = ImageTk.PhotoImage(Image.open(picture_path))
+    image_label = ttk.Label(newWindow, image=images, width=100, padding=100)
+    image_label.grid(column=200, row=200)
+    newWindow.mainloop()
+
+
 window = tk.Tk()
+window.title("EMG ACQUISITION GUI")
+window.geometry("500x500")
 
-experiment_message = tk.Label(text="EMG EXPERIMENT")
-experiment_message.pack()
 
-acquisition_time = tk.Entry(window, width=50, borderwidth=5)
-acquisition_time.pack()
+window.columnconfigure(0, weight=200)
+window.columnconfigure(1, weight=200)
+window.columnconfigure(2, weight=200)
 
+experiment_message = ttk.Label(text="EMG EXPERIMENT")
+experiment_message.grid(column=1, row=0, padx=10, pady=10)
+
+time_label = ttk.Label(text="Enter time   ")
+time_label.grid(column=0, row=1, sticky=tk.W, padx=5, pady=5)
+acquisition_time = tk.Entry(window, width=50, borderwidth=10)
+acquisition_time.grid(column=1, row=1, sticky=tk.E, padx=5, pady=5)
+
+subject_label = ttk.Label(text="Enter Subject")
+subject_label.grid(column=0, row=2, sticky=tk.W, padx=5, pady=5)
 subject_no = tk.Entry(window, width=50, borderwidth=10)
-subject_no.pack()
+subject_no.grid(column=1, row=2, sticky=tk.W, padx=5, pady=5)
 
-rep_no = tk.Entry(window, width=50, borderwidth=15)
-rep_no.pack()
+repetition_label = ttk.Label(text="Enter Repetition")
+repetition_label.grid(column=0, row=3, sticky=tk.W, padx=5, pady=5)
+rep_no = tk.Entry(window, width=50, borderwidth=10)
+rep_no.grid(column=1, row=3, sticky=tk.W, padx=5, pady=5)
 
 clicked = tk.StringVar()
 clicked.set("Gesture 1")
 drop = tk.OptionMenu(window, clicked, "Gesture 1", "Gesture 2", "Gesture 3", "Gesture 4", "Gesture 5",
                      "Gesture 6", "Gesture 7")
-drop.pack()
+drop.grid(column=1, row=4, pady=10)
 
 image_list = ["exp{}.png".format(i) for i in range(1, 8)]
-picture_path = "/home/darcula-venom/Documents/ExperimentalDesign/MyoBand_sEMG_Acquisition/pictures/{}".format(image_list[1])
-image = ImageTk.PhotoImage(Image.open(picture_path))
-image_label = tk.Label(image=image)
-image_label.pack()
 
 start_button = tk.Button(window, text="Start Experiment", command=acquire_data, bg="green")
-start_button.pack()
+start_button.grid(column=1, row=5, pady=10)
+
+display_button = tk.Button(window, text="Display Gesture", command=display_gesture_new_window, bg="orange")
+display_button.grid(column=1, row=6, pady=10)
 
 window.mainloop()
+
