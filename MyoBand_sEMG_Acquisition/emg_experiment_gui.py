@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from experiment_one import *
+from emg_experiment import *
 from playsound import playsound
 import os
 from PIL import ImageTk, Image
@@ -30,7 +30,7 @@ def acquire_data():
     mat_file = mat_file_path + '/S{}_R{}_G{}'.format(subject_index, repetition_index, experiment_index)
 
     mode = emg_mode.RAW
-    p = multiprocessing.Process(target=data_worker(mode, seconds, csv_file, mat_file))
+    p = multiprocessing.Process(target=get_emg_data(mode, seconds, csv_file, mat_file))
     p.start()
 
 
