@@ -17,8 +17,8 @@ def acquire_data():
     experiment_index = clicked.get().split()[1]
     repetition_index = rep_no.get()
 
-    csv_file_path = base_path + "/ExperimentalDesign/BMIS_EMG_DATA/data/csv_data/subject_" + subject_index
-    mat_file_path = base_path + "/ExperimentalDesign/BMIS_EMG_DATA/data/mat_data/subject_" + subject_index
+    csv_file_path = base_path + "/BMIS_EMG_DATA/data/csv_data/subject_" + subject_index
+    mat_file_path = base_path + "/BMIS_EMG_DATA/data/mat_data/subject_" + subject_index
 
     print(csv_file_path)
     print(mat_file_path)
