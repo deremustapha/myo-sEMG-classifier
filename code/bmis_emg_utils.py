@@ -81,7 +81,7 @@ def pre_processing(data):
     filtered_data = {}
     for index in keys:
         dat = data[index].transpose()
-        offset_removed_data = lowpass_filter(dat, fs=200, offset=99.0, order=6)
+        offset_removed_data = lowpass_filter(dat, fs=200, offset=70.0, order=6)
         notched_data = mains_removal(offset_removed_data, fs=200, notch_freq=60.0, quality_factor=30.0)
         # filtered = butter_bandpass_filter(notched_data)
         filtered = notched_data
